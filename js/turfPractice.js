@@ -6,14 +6,43 @@ function turfFunctions(map) {
   alert('This application is created by Aleksander Pertelson. The map includes various layers and features that demonstrate the capabilities of web mapping technologies. Please explore the map and feel free to provide feedback or report any issues you encounter. Enjoy your experience!')
 
   // add click event listener to the map
-map.on('click', function(event) {
-  console.log(`[${event.latlng.lng}, ${event.latlng.lat}]`)
-  // define coordinates of the point
-  let pointCoords = [event.latlng.lng, event.latlng.lat]
-  // create a turf point
-  let turfPoint = turf.point(pointCoords)
-  // convert the point to GeoJSON format and add it to the map
-  L.geoJSON(turfPoint).addTo(map)
+  // add click event listener to the map
+  const clickLayer = L.layerGroup().addTo(map)
+
+  map.on('click', function(event) {
+    clickLayer.clearLayers()
+    console.log(`[${event.latlng.lng}, ${event.latlng.lat}]`)
+    // define coordinates of the point
+    let pointCoords = [event.latlng.lng, event.latlng.lat]
+    // create a turf point
+    let turfPoint = turf.point(pointCoords)
+    // convert the point to GeoJSON format and add it to the click layer
+
+
+    // 🔵 tee ring (nt 50 m raadius)
+    let circle = turf.buffer(turfPoint, 200, { units: 'meters' })
+
+  // lisa klõpsatud ring kaardile
+  L.geoJSON(circle, {
+    style: {
+      color: 'orange',
+      fillOpacity: 0.3
+    }
+  }).addTo(clickLayer)
+
+  //lisa klõpsatud punkt kaardile
+    L.geoJSON(turfPoint
+, {
+  pointToLayer: function (feature, latlng) {
+    return L.circleMarker(latlng, {
+      radius: 1,
+      color: 'red',
+      fillColor: 'red',
+      fillOpacity: 1
+    });
+  }
+}).addTo(clickLayer)
+
 })
 // string interpolation
 let string1 = 'hello'
