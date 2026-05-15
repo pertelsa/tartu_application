@@ -90,6 +90,8 @@ body {
   border-radius: 4px;
   font-family: Arial, sans-serif;
   display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #info-header {
